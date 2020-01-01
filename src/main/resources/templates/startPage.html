@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:text-align="http://www.w3.org/1999/xhtml">
+<head>
+    <title>MTS Rebirth</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <meta charset="UTF-8">
+</head>
+
+<body>
+<h1>MTS Rebirth</h1>
+<div class="container">
+    <div th:insert="navBar"></div>
+
+    <table th:object="${records}" id="userTable" border="1">
+    <tr>
+        <th>Ticket id</th>
+        <th>Action</th>
+        <th>Type</th>
+        <th>Object</th>
+        <th>Name</th>
+        <th>Ref env</th>
+        <th>SysTest</th>
+        <th>AccTest</th>
+        <th>PROD</th>
+    </tr>
+    <tr th:each="record:${records}">
+        <td th:text="${record.getTicketNumber()}"></td>
+        <td th:text="${record.getAction()}"></td>
+        <td th:text="${record.getObjectType()}"></td>
+        <td th:text="${record.getObjectName()}"></td>
+        <td th:text="${record.getUserName()}"></td>
+        <td th:text="${record.getReferenceEnv()}"></td>
+        <td th:text="${record.getSysTestDeployed()}"></td>
+        <td th:text="${record.getAccTestDeployed()}"></td>
+        <td th:text="${record.getProdDeployed()}"></td>
+    </tr>
+    </table>
+</div>
+</body>
+</html>
