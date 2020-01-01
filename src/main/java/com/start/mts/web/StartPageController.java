@@ -16,9 +16,6 @@ import java.util.List;
 public class StartPageController {
 
     @Autowired
-    RecordService recordService;
-
-    @Autowired
     RecordRepository repository;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -27,10 +24,11 @@ public class StartPageController {
         model.addAttribute("records", records);
         return "startPage";
     }
-
-    @RequestMapping(value = "/", method = RequestMethod.POST)
+/*
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getRecordsByFilters(Model model, @RequestParam(value = "ticketNumber", required = false) String ticketNumber) {
+        List<Record> records = repository.findByTicketNumber("cals-123");
         return "startPage";
-    }
+    }*/
 
 }
