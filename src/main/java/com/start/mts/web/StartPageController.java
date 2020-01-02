@@ -1,5 +1,6 @@
 package com.start.mts.web;
 
+import com.start.mts.RecordService;
 import com.start.mts.db.RecordRepository;
 import com.start.mts.domain.Record;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,34 +10,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class StartPageController {
-
     @Autowired
-    RecordRepository repository;
-
+    RecordService service;
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String getRecords(@RequestParam(required = false, defaultValue = "") String filter1,
-                             @RequestParam(required = false, defaultValue = "") String filter2,
+    public String getRecords(@RequestParam(required = false) String filterTicketId,
+                             @RequestParam(required = false) String filterObjectType,
+                             @RequestParam(required = false) String filterObjectName,
+                             @RequestParam(required = false) String filterName,
+                             @RequestParam(required = false) String filterRefEnv,
                              Model model) {
 
-        List<Record> records;
-        if (filter1 != null && !filter1.isEmpty()) {
-            records = repository.findByTicketNumber(filter1);
-        } else if (filter2 != null && !filter2.isEmpty()) {
-            records = repository.findByObjectName(filter2);
-        } else {
-            records = repository.findAll();
-        }
-        model.addAttribute("filter1", filter1);
-        model.addAttribute("filter2", filter2);
+        List<Record> records = service.findByCriteria(filterTicketId,
+                filterObjectType,
+                filterObjectName,
+                filterName,
+                filterRefEnv);
         model.addAttribute("records", records);
         return "startPage";
     }
 
+//TODO
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public String addNewRecord(Model model,
                                @RequestParam(value = "env", required = true) String env,
@@ -48,4 +45,5 @@ public class StartPageController {
         model.addAttribute("success", true);
         return "addNewRecord";
     }
+
 }

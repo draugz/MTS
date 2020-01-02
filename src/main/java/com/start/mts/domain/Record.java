@@ -2,7 +2,7 @@ package com.start.mts.domain;
 
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "records", schema = "mts")
@@ -17,35 +17,8 @@ public class Record {
     private String objectType;
     private String objectName;
     private String action; //TODO: enum
-    /*@Transient
-    private List<EnvDeploy> envs;*/
-    private Date sysTestDeployed;
-    private Date accTestDeployed;
-    private Date prodDeployed;
-
-    public void setProdDeployed(Date prodDeployed) {
-        this.prodDeployed = prodDeployed;
-    }
-
-    public Date getProdDeployed() {
-        return prodDeployed;
-    }
-
-    public void setSysTestDeployed(Date sysTestDeployed) {
-        this.sysTestDeployed = sysTestDeployed;
-    }
-
-    public void setAccTestDeployed(Date accTestDeployed) {
-        this.accTestDeployed = accTestDeployed;
-    }
-
-    public Date getSysTestDeployed() {
-        return sysTestDeployed;
-    }
-
-    public Date getAccTestDeployed() {
-        return accTestDeployed;
-    }
+    @OneToMany
+    private List<EnvDeploy> envs;
 
     public Record() {
     }
@@ -106,19 +79,4 @@ public class Record {
         this.objectName = objectName;
     }
 
- /*   public void setEnvs(List<EnvDeploy> envs) {
-        this.envs = envs;
-    }
-
-    public List<EnvDeploy> getEnvs() {
-        return envs;
-    }
-    public String findEnvsString() {
-        List<EnvDeploy> list = this.getEnvs();
-        String res = "";
-        for (EnvDeploy env: list){
-            res = res + env.getEnv() + " " + env.getDate().toString();
-        }
-        return res;
-    }*/
 }
