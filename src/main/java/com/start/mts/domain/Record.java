@@ -8,19 +8,37 @@ import java.util.List;
 @Table(name = "records", schema = "mts")
 public class Record {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int recordId;
-
     private String userName;
     private String referenceEnv;
     private String ticketNumber;
     private String objectType;
     private String objectName;
-    private String action; //TODO: enum
+    private String action;
+
     @OneToMany
     private List<EnvDeploy> envs;
 
     public Record() {
+    }
+
+    public Record(String userName, String referenceEnv, String ticketNumber, String objectType, String objectName, String action, List<EnvDeploy> envs) {
+        this.userName = userName;
+        this.referenceEnv = referenceEnv;
+        this.ticketNumber = ticketNumber;
+        this.objectType = objectType;
+        this.objectName = objectName;
+        this.action = action;
+        this.envs = envs;
+    }
+
+    public void setEnvs(List<EnvDeploy> envs) {
+        this.envs = envs;
+    }
+
+    public List<EnvDeploy> getEnvs() {
+        return envs;
     }
 
     public int getRecordId() {

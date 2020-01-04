@@ -25,72 +25,129 @@
 <h1>MTS Rebirth</h1>
 <div class="container">
     <div th:insert="navBar"></div>
-
-    <div class="container">
-        <!--Search menus-->
-        <div class="form-row">
-            <div class="form-group col-md-20">
-                <div class="row">
-                    <div class="form-group col-xs-6">
-                        <form method="get" action="/" class="form-inline ">
-                            <input type="text" name="filterTicketId" class="form-control" value=""
-                                   placeholder="Ticket id">
-                        </form>
-                    </div>
-                    <div class="form-group col-xs-6">
-                        <form method="get" action="/" class="form-inline">
-                            <input type="text" name="filterObjectType" class="form-control" value=""
-                                   placeholder="Object type">
-                        </form>
-                    </div>
-                    <div class="form-group col-xs-6">
-                        <form method="get" action="/" class="form-inline">
-                            <input type="text" name="filterObjectName" class="form-control" value=""
-                                   placeholder="Object name">
-                        </form>
-                    </div>
-                    <div class="form-group col-xs-6">
-                        <form method="get" action="/" class="form-inline">
-                            <input type="text" name="filterName" class="form-control" value=""
-                                   placeholder="Name">
-                        </form>
-                    </div>
-                    <div class="form-group col-xs-6">
-                        <form method="get" action="/" class="form-inline">
-                            <input type="text" name="filterRefEnv" class="form-control" value=""
-                                   placeholder="Reference environment">
-                        </form>
-                    </div>
-                    <!--Does not work-->
-                    <div class="form-group">
-                        <button type="button" class="btn btn-outline-primary">All</button>
-                    </div>
-                </div>
+    <!--Search menus-->
+    <div class="form-group col-md-20">
+        <div class="row">
+            <div><label class="col-sm-2 col-form-label"> Search:</label></div>
+            <div class="form-group col-xs-6">
+                <form method="get" action="/" class="form-inline">
+                    <select class="form-control " id="filterTicketId" name="filterTicketId">
+                        <option disabled="disabled" selected value=" "> -- select an option --</option>
+                        <option th:each="ticket : ${existingTickets}"
+                                th:value="${ticket}"
+                                th:text="${ticket}">
+                        </option>
+                    </select>
+                </form>
             </div>
+            <div class="form-group col-xs-6">
+                <form method="get" action="/" class="form-inline">
+                    <select class="form-control " id="validObjectTypesSeacrh" name="validObjectTypes">
+                        <option disabled="disabled" selected value=" "> -- select an option --</option>
+                        <option th:each="ot : ${validObjectTypes}"
+                                th:value="${ot}"
+                                th:text="${ot}">
+                        </option>
+                    </select>
+                </form>
+            </div>
+            <div class="form-group col-xs-6">
+                <form method="get" action="/" class="form-inline">
+                    <input type="text" name="filterObjectName" class="form-control" value="" placeholder="Object name">
+                </form>
+            </div>
+            <div class="form-group col-xs-6">
+                <form method="get" action="/" class="form-inline">
+                    <select class="form-control " id="namesSearch" name="names">
+                        <option disabled="disabled" selected value=" "> -- select an option --</option>
+                        <option th:each="name : ${names}"
+                                th:value="${name}"
+                                th:text="${name}">
+                        </option>
+                    </select>
+                </form>
+            </div>
+            <div class="form-group col-xs-6">
+                <form method="get" action="/" class="form-inline">
+                    <select class="form-control " id="referenceEnvsSearch" name="referenceEnvs">
+                        <option disabled="disabled" selected value=" "> -- select an option --</option>
+                        <option th:each="ref : ${referenceEnvs}"
+                                th:value="${ref}"
+                                th:text="${ref}">
+                        </option>
+                    </select>
+                </form>
+            </div>
+             <div class="form-group">
+                 <a class="btn btn-outline-primary" href="/" role="button">Search</a>
+             </div>
+            <div class="form-group">
+                <a class="btn btn-outline-primary" href="/" role="button">All</a>
+            </div>
+
         </div>
     </div>
+
 
     <!--Add new record-->
     <a class="btn btn-outline-primary mb-2" data-toggle="collapse" href="#collapseInput" role="button"
        aria-expanded="false"
        aria-controls="collapseInput">Add</a>
     <div class="collapse mb-5" id="collapseInput">
-        <form method="post" enctype="multipart/form-data">
-            <input type="text" name="text" placeholder="Ticket number"/>
-            <input type="text" name="text" placeholder="Action">
-            <input type="text" name="text" placeholder="Type"/>
-            <input type="text" name="text" placeholder="Object">
-            <input type="text" name="text" placeholder="Name"/>
-            <input type="text" name="text" placeholder="Ref env">
-            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-            <div class="form-group mt-2">
-                <button type="submit" class="btn btn-primary">Save</button>
+        <div class="form-group col-md-20">
+            <div class="row">
+                <form th:action="@{/}" method="post" enctype="multipart/form-data">
+                    <input type="text" name="ticketNumber" placeholder="Ticket number"/>
+                    <div class="form-group col-xs-6">
+                        <select class="form-control " id="actions" name="action">
+                            <option th:each="ac : ${actions}"
+                                    th:value="${ac}"
+                                    th:text="${ac}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <select class="form-control " id="validObjectTypes" name="objectType">
+                            <option th:each="objectType : ${validObjectTypes}"
+                                    th:value="${objectType}"
+                                    th:text="${objectType}">
+                            </option>
+                        </select>
+                    </div>
+                    <input type="text" name="objectName" placeholder="Object">
+                    <div class="form-group col-xs-6">
+                        <select class="form-control " id="names" name="name">
+                            <option th:each="name : ${names}"
+                                    th:value="${name}"
+                                    th:text="${name}">
+                            </option>
+                        </select>
+                        </select>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <select class="form-control " id="referenceEnvs" name="refEnv">
+                            <option th:each="refEnv : ${referenceEnvs}"
+                                    th:value="${refEnv}"
+                                    th:text="${refEnv}">
+                            </option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+                    <div class="container mt-3">
+                        <button type="submit" name="action" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
+
+    <div th:if="${success}">
+        <div class="alert alert-success" role="alert">Added!</div>
+    </div>
+
     <div>
         <!--List of records-->
-        <table class="table table-bordered" th:object="${records}" id="userTable" >
+        <table class="table table-bordered" th:object="${records}" id="userTable">
             <thead>
             <tr>
                 <th scope="col">Ticket id</th>

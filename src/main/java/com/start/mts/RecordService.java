@@ -1,6 +1,7 @@
 package com.start.mts;
 
 import com.start.mts.db.RecordRepository;
+import com.start.mts.domain.ObjectType;
 import com.start.mts.domain.Record;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -48,6 +49,30 @@ public class RecordService {
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         });
+    }
+
+    public List<String> getExistingTicketNumbers() {
+        List<String> tickets = repository.findDistinctTicketNumbers();
+        java.util.Collections.sort(tickets);
+        return tickets;
+    }
+
+    public List<String> getObjectTypes(){
+        List<String> types = repository.findDistinctObjectTypes();
+        java.util.Collections.sort(types);
+        return types;
+    }
+
+    public List<String> getReferenceEnvironments(){
+        List<String> refEnvs = repository.findAllReferenceEnvs();
+        java.util.Collections.sort(refEnvs);
+        return refEnvs;
+    }
+
+    public List<String> getNames(){
+        List<String> names = repository.findAllNames();
+        java.util.Collections.sort(names);
+        return names;
     }
 }
 

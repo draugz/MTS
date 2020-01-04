@@ -7,7 +7,7 @@ import java.util.Date;
 @Table(name = "env_deploy", schema = "mts")
 public class EnvDeploy {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "record_id")
