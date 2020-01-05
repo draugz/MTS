@@ -1,7 +1,6 @@
 package com.start.mts;
 
 import com.start.mts.db.RecordRepository;
-import com.start.mts.domain.ObjectType;
 import com.start.mts.domain.Record;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -27,27 +26,24 @@ public class RecordService {
                                        String filterObjectName,
                                        String filterName,
                                        String filterRefEnv) {
-        return repository.findAll(new Specification<Record>() {
-            @Override
-            public Predicate toPredicate(Root<Record> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                List<Predicate> predicates = new ArrayList<>();
-                if (filterTicketId != null) {
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("ticketNumber"), filterTicketId)));
-                }
-                if (filterObjectType != null) {
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("objectType"), filterObjectType)));
-                }
-                if (filterObjectName != null) {
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("objectName"), filterObjectName)));
-                }
-                if (filterName != null) {
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("userName"), filterName)));
-                }
-                if (filterRefEnv != null) {
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("referenceEnv"), filterRefEnv)));
-                }
-                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+        return repository.findAll((Specification<Record>) (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (filterTicketId != null) {
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("ticketNumber"), filterTicketId)));
             }
+            if (filterObjectType != null) {
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("objectType"), filterObjectType)));
+            }
+            if (filterObjectName != null) {
+                predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("objectName"), filterObjectName)));
+            }
+            if (filterName != null) {
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("userName"), filterName)));
+            }
+            if (filterRefEnv != null) {
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("referenceEnv"), filterRefEnv)));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         });
     }
 

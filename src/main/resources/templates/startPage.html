@@ -23,141 +23,115 @@
 
 <body>
 <h1>MTS Rebirth</h1>
+<div th:insert="navBar"></div>
+
 <div class="container">
-    <div th:insert="navBar"></div>
     <!--Search menus-->
-    <div class="form-group col-md-20">
-        <div class="row">
-            <div><label class="col-sm-2 col-form-label"> Search:</label></div>
+    <div class="form-group">
+        <div class="form-row">
+            <div><label class="col-md-2 col-form-label"> Search:</label></div>
+            <form method="get" th:action="@{/}" class="form-inline">
+                <select class="form-control " id="filterTicketId" name="filterTicketId">
+                    <option disabled="disabled" selected value=" "> -- select a ticket id  --</option>
+                    <option th:each="ticket : ${existingTickets}"
+                            th:value="${ticket}"
+                            th:text="${ticket}">
+                    </option>
+                </select>
 
-            <form  th:action="@{/}" method="get" enctype="multipart/form-data">
-                <div class="form-group col-xs-6">
-                    <form method="get" action="/" class="form-inline">
-                        <select class="form-control " id="filterTicketId" name="filterTicketId">
-                            <option disabled="disabled" selected value=" "> -- select an option --</option>
-                            <option th:each="ticket : ${existingTickets}"
-                                    th:value="${ticket}"
-                                    th:text="${ticket}">
-                            </option>
-                        </select>
+                <select class="form-control " id="validObjectTypesSeacrh" name="validObjectTypes">
+                    <option disabled="disabled" selected value=" "> -- select an object type --</option>
+                    <option th:each="ot : ${validObjectTypes}"
+                            th:value="${ot}"
+                            th:text="${ot}">
+                    </option>
+                </select>
 
-                    </form>
-                    <!--  <input type="text" th:field="value" name="searchField"/>-->
-                </div>
-                <div class="form-group col-xs-6">
-                    <form method="get" action="/" class="form-inline">
-                        <select class="form-control " id="validObjectTypesSeacrh" name="validObjectTypes">
-                            <option disabled="disabled" selected value=" "> -- select an option --</option>
-                            <option th:each="ot : ${validObjectTypes}"
-                                    th:value="${ot}"
-                                    th:text="${ot}">
-                            </option>
-                        </select>
-                    </form>
-                </div>
-                <div class="form-group col-xs-6">
-                    <form method="get" action="/" class="form-inline">
-                        <input type="text" name="filterObjectName" class="form-control" value=""
-                               placeholder="Object name">
-                    </form>
-                </div>
-                <div class="form-group col-xs-6">
-                    <form method="get" action="/" class="form-inline">
-                        <select class="form-control " id="namesSearch" name="names">
-                            <option disabled="disabled" selected value=" "> -- select an option --</option>
-                            <option th:each="name : ${names}"
-                                    th:value="${name}"
-                                    th:text="${name}">
-                            </option>
-                        </select>
-                    </form>
-                </div>
-                <div class="form-group col-xs-6">
-                    <form method="get" action="/" class="form-inline">
-                        <select class="form-control " id="referenceEnvsSearch" name="referenceEnvs">
-                            <option disabled="disabled" selected value=" "> -- select an option --</option>
-                            <option th:each="ref : ${referenceEnvs}"
-                                    th:value="${ref}"
-                                    th:text="${ref}">
-                            </option>
-                        </select>
-                    </form>
-                </div>
-                  <div class="form-group">
-                      <a class="btn btn-outline-primary" type="submit" role="button">Search</a>
-                  </div>
-                <div class="form-group">
-                    <a class="btn btn-outline-primary" href="/" role="button">All</a>
-                </div>
+                <input type="text" name="filterObjectName" class="form-control" value=""
+                       placeholder="Object name">
+
+                <select class="form-control " id="namesSearch" name="names">
+                    <option disabled="disabled" selected value=" "> -- select name --</option>
+                    <option th:each="name : ${names}"
+                            th:value="${name}"
+                            th:text="${name}">
+                    </option>
+                </select>
+                <select class="form-control " id="referenceEnvsSearch" name="referenceEnvs">
+                    <option disabled="disabled" selected value=" "> -- select ref env --</option>
+                    <option th:each="ref : ${referenceEnvs}"
+                            th:value="${ref}"
+                            th:text="${ref}">
+                    </option>
+                </select>
+                <a class="btn btn-outline-primary" type="submit" role="button">Search</a>
+                <a class="btn btn-outline-primary" href="/" role="button">All</a>
             </form>
         </div>
     </div>
 
     <!--Add new record-->
-    <a class="btn btn-outline-primary mb-2" data-toggle="collapse" href="#collapseInput" role="button"
-       aria-expanded="false"
-       aria-controls="collapseInput">Add</a>
-
-    <div class="collapse mb-5" id="collapseInput">
-        <div class="form-group col-md-20">
-            <div class="row">
-
-                <form th:action="@{/}" method="post" enctype="multipart/form-data">
-                    <form method="get" action="/" class="form-inline">
-                        <input type="text" name="ticketNumber" placeholder="Ticket number"/>
-                        <div class="form-group col-xs-6">
-                            <select class="form-control " id="actions" name="action">
-                                <option th:each="ac : ${actions}"
-                                        th:value="${ac}"
-                                        th:text="${ac}">
-                                </option>
-                            </select>
-                        </div>
-                        <div class="form-group col-xs-6">
-                            <select class="form-control " id="validObjectTypes" name="objectType">
-                                <option th:each="objectType : ${validObjectTypes}"
-                                        th:value="${objectType}"
-                                        th:text="${objectType}">
-                                </option>
-                            </select>
-                        </div>
-                        <input type="text" name="objectName" placeholder="Object">
-                        <div class="form-group col-xs-6">
-                            <select class="form-control " id="names" name="name">
-                                <option th:each="name : ${names}"
-                                        th:value="${name}"
-                                        th:text="${name}">
-                                </option>
-                            </select>
-                        </div>
-                        <div class="form-group col-xs-6">
-                            <select class="form-control " id="referenceEnvs" name="refEnv">
-                                <option th:each="refEnv : ${referenceEnvs}"
-                                        th:value="${refEnv}"
-                                        th:text="${refEnv}">
-                                </option>
-                            </select>
-                        </div>
-                        <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-                        <div class="container mt-3">
-                            <button type="submit" name="action" class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </form>
-            </div>
+    <div>
+        <div class="form-group">
+            <div><label class="col-md-2 col-form-label"> Add:</label></div>
+            <form th:action="@{/}" method="post" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div >
+                        <input type="text" class="form-control " name="ticketNumber" placeholder="Ticket number"/>
+                    </div>
+                    <div >
+                        <select class="form-control " id="actions" name="action">
+                            <option th:each="ac : ${actions}"
+                                    th:value="${ac}"
+                                    th:text="${ac}">
+                            </option>
+                        </select>
+                    </div>
+                    <div >
+                        <select class="form-control " id="validObjectTypes" name="objectType">
+                            <option th:each="objectType : ${validObjectTypes}"
+                                    th:value="${objectType}"
+                                    th:text="${objectType}">
+                            </option>
+                        </select>
+                    </div>
+                    <div>
+                        <input class="form-control " type="text" name="objectName" placeholder="Object">
+                    </div>
+                    <div >
+                        <select class="form-control " id="names" name="name">
+                            <option th:each="name : ${names}"
+                                    th:value="${name}"
+                                    th:text="${name}">
+                            </option>
+                        </select>
+                    </div>
+                    <div >
+                        <select class="form-control " id="referenceEnvs" name="refEnv">
+                            <option th:each="refEnv : ${referenceEnvs}"
+                                    th:value="${refEnv}"
+                                    th:text="${refEnv}">
+                            </option>
+                        </select>
+                    </div>
+                    <div >
+                        <button type="submit" name="action" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div th:if="${success}">
+            <div class="alert alert-success" role="alert">Added!</div>
+        </div>
+        <div th:if="${success==false}">
+            <div class="alert alert-danger" role="alert">Failed! <span th:text="${error}"></span></div>
         </div>
     </div>
 
-    <div th:if="${success}">
-        <div class="alert alert-success" role="alert">Added!</div>
-    </div>
-    <div th:if="${success==false}">
-        <div class="alert alert-danger" role="alert">Failed! <span th:text= "${error}"></span></div>
-    </div>
 
-    <div>
         <!--List of records-->
-        <table class="table table-bordered" th:object="${records}" id="userTable">
+    <div>
+        <table class="table table-bordered" th:object="${records}" id="table">
             <thead>
             <tr>
                 <th scope="col">Ticket id</th>
@@ -181,6 +155,5 @@
         </table>
     </div>
 </div>
-
 </body>
 </html>
