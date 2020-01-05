@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 @Controller
 public class StartPageController {
     @Autowired
@@ -31,6 +32,7 @@ public class StartPageController {
                              @RequestParam(required = false) String filterName,
                              @RequestParam(required = false) String filterRefEnv,
                              Model model) {
+
         List<String> existingTickets = service.getExistingTicketNumbers();
         model.addAttribute("existingTickets", existingTickets);
 
@@ -46,13 +48,12 @@ public class StartPageController {
         List<String> names = service.getNames();
         model.addAttribute("names", names);
 
-
-//TODO filterObjectName find LIKE
         List<Record> records = service.findByCriteria(filterTicketId,
                 filterObjectType,
                 filterObjectName,
                 filterName,
                 filterRefEnv);
+
         model.addAttribute("records", records);
         return "startPage";
     }

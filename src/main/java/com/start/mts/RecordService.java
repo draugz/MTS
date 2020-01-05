@@ -33,7 +33,7 @@ public class RecordService {
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("objectType"), filterObjectType)));
             }
             if (StringUtils.isNotEmpty(filterObjectName)) {
-                predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("objectName"), filterObjectName)));
+                predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("objectName"), "%" + filterObjectName +"%")));
             }
             if (filterName != null) {
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("userName"), filterName)));
