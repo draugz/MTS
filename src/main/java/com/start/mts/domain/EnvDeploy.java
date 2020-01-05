@@ -56,4 +56,9 @@ public class EnvDeploy {
         this.env = env;
         this.date = date;
     }
+
+    public EnvDeploy(String env, Date date) {
+        this.env = env;
+        this.date = date;
+    }
 }

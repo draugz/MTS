@@ -17,7 +17,8 @@ public class Record {
     private String objectName;
     private String action;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "record_id")
     private List<EnvDeploy> envs;
 
     public Record() {
@@ -97,4 +98,27 @@ public class Record {
         this.objectName = objectName;
     }
 
+    public boolean isSystestDeployed() {
+        return isEnvDeployed("SYSTEST");
+    }
+
+    public boolean isAcceptanceDeployed() {
+        return  isEnvDeployed("ACCTEST");
+    }
+
+    public boolean isProdDeployed() {
+        return isEnvDeployed("PROD");
+    }
+
+    public boolean isEnvDeployed(String envName) {
+        if (envName != null) {
+            List<EnvDeploy> envs = this.getEnvs();
+            for (EnvDeploy env : envs) {
+                if (envName.equals(env.getEnv())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
