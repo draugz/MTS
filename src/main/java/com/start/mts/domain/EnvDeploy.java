@@ -11,16 +11,16 @@ public class EnvDeploy {
     private int id;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "record_id")
-    private Record recordId;
+    private Record record;
     private String env;
     private Date date;
-    
+
     public int getId() {
         return id;
     }
 
-    public Record getRecordId() {
-        return recordId;
+    public Record getRecord() {
+        return record;
     }
 
     public String getEnv() {
@@ -35,8 +35,8 @@ public class EnvDeploy {
         this.id = id;
     }
 
-    public void setRecordId(Record recordId) {
-        this.recordId = recordId;
+    public void setRecord(Record record) {
+        this.record = record;
     }
 
     public void setEnv(String env) {
@@ -50,15 +50,16 @@ public class EnvDeploy {
     public EnvDeploy() {
     }
 
-    public EnvDeploy(int id, Record recordId, String env, Date date) {
+    public EnvDeploy(int id, Record record, String env, Date date) {
         this.id = id;
-        this.recordId = recordId;
+        this.record = record;
         this.env = env;
         this.date = date;
     }
 
-    public EnvDeploy(String env, Date date) {
+    public EnvDeploy(String env, Date date, Record recordId) {
         this.env = env;
         this.date = date;
+        this.record = recordId;
     }
 }

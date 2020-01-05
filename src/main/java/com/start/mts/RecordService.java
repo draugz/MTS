@@ -33,7 +33,7 @@ public class RecordService {
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("objectType"), filterObjectType)));
             }
             if (StringUtils.isNotEmpty(filterObjectName)) {
-                predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("objectName"), "%" + filterObjectName +"%")));
+                predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("objectName"), "%" + filterObjectName + "%")));
             }
             if (filterName != null) {
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("userName"), filterName)));
@@ -51,22 +51,39 @@ public class RecordService {
         return tickets;
     }
 
-    public List<String> getObjectTypes(){
+    public List<String> getObjectTypes() {
         List<String> types = repository.findDistinctObjectTypes();
         java.util.Collections.sort(types);
         return types;
     }
 
-    public List<String> getReferenceEnvironments(){
+    public List<String> getReferenceEnvironments() {
         List<String> refEnvs = repository.findAllReferenceEnvs();
         java.util.Collections.sort(refEnvs);
         return refEnvs;
     }
 
-    public List<String> getNames(){
+    public List<String> getAllEnvironments() {
+        List<String> refEnvs = repository.findAllEnvironments();
+        java.util.Collections.sort(refEnvs);
+        return refEnvs;
+    }
+
+    public List<String> getNames() {
         List<String> names = repository.findAllNames();
         java.util.Collections.sort(names);
         return names;
+    }
+
+    public String highestEnvironmentDeployed(Record record) {
+        if (record.isProdDeployed()) {
+            return "PROD";
+        } else if (record.isAcceptanceDeployed()){
+            return "ACC";
+        } else if (record.isSystestDeployed()){
+            return "SYSTEST";
+        }
+        return "";
     }
 }
 

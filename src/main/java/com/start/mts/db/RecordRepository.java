@@ -3,6 +3,7 @@ package com.start.mts.db;
 import com.start.mts.domain.Record;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -22,5 +23,11 @@ public interface RecordRepository extends JpaRepository<Record, Integer>, JpaSpe
 
     @Query(value = "select name from mts.names", nativeQuery = true)
     List<String> findAllNames();
+
+
+    @Query(value = "select env_name from mts.environments", nativeQuery = true)
+    List<String> findAllEnvironments();
+
+    List<Record> findByTicketNumber(String ticketNumber);
 
 }

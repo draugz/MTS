@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@SuppressWarnings("unchecked")
 @Controller
 public class StartPageController {
     @Autowired

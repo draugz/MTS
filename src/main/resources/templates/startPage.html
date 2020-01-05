@@ -30,57 +30,7 @@
 <div class="container-fluid">
 
     <!--Search menus-->
-    <div class="form-group">
-        <div><label class="col col-form-label"> Search:</label></div>
-        <form method="get" th:action="@{/}" class="form-inline">
-            <div class="form-row">
-                <div class="col">
-                    <select class="form-control " id="filterTicketId" name="filterTicketId">
-                        <option disabled="disabled" selected value=" "> -- select a ticket id --</option>
-                        <option th:each="ticket : ${existingTickets}"
-                                th:value="${ticket}"
-                                th:text="${ticket}">
-                        </option>
-                    </select>
-                </div>
-                <div class="col">
-                    <select class="form-control " id="filterObjectType" name="filterObjectType">
-                        <option disabled="disabled" selected value=" "> -- select an object type --</option>
-                        <option th:each="ot : ${validObjectTypes}"
-                                th:value="${ot}"
-                                th:text="${ot}">
-                        </option>
-                    </select>
-                </div>
-                <div class="col">
-                    <input type="text" name="filterObjectName" class="form-control" value=""
-                           placeholder="type object name">
-                </div>
-                <div class="col">
-                    <select class="form-control " id="filterName" name="filterName">
-                        <option disabled="disabled" selected value=" "> -- select name --</option>
-                        <option th:each="name : ${names}"
-                                th:value="${name}"
-                                th:text="${name}">
-                        </option>
-                    </select>
-                </div>
-                <div class="col">
-                    <select class="form-control " id="referenceEnvsSearch" name="referenceEnvs">
-                        <option disabled="disabled" selected value=" "> -- select ref env --</option>
-                        <option th:each="ref : ${referenceEnvs}"
-                                th:value="${ref}"
-                                th:text="${ref}">
-                        </option>
-                    </select>
-                </div>
-                <div class="col">
-                    <button type="submit" name="action" class="btn btn-primary">Search</button>
-                    <a class="btn btn-outline-primary" href="/" role="button">All</a>
-                </div>
-            </div>
-        </form>
-    </div>
+    <div th:insert="search"></div>
 
     <!--Add new record-->
     <div>
@@ -156,6 +106,23 @@
             </thead>
             <tbody>
             <tr th:each="record:${records}">
+            <!-- th:block rather than unneeded div -->
+            <th:block th:switch="${latestEnv}">
+                <div th:case="'PROD'"  th:style="background-color: #c9ffcd">
+                    <!-- print object is not active -->
+                </div>
+                <div th:case="'ACC'" th:style="background-color: #fbffc9" >
+                    <!-- print object is not active -->
+                </div>
+                <div th:case="'SYSTEST'" th:style="background-color: #c9eeff">
+                    <!-- print object is new and active -->
+                </div>
+            </th:block>
+
+          <!--  <div th:case="'PROD'"  th:style="background-color: #c9ffcd"></div>
+            <div th:case="'ACC'"  th:style="background-color: #fbffc9"></div>
+            <div th:case="'SYSTEST'"  th:style="background-color: #c9eeff"></div>
+-->
                 <td th:text="${record.getTicketNumber()}"></td>
                 <td th:text="${record.getAction()}"></td>
                 <td th:text="${record.getObjectType()}"></td>
