@@ -28,46 +28,55 @@
 <div class="container">
     <!--Search menus-->
     <div class="form-group">
-        <div class="form-row">
-            <div><label class="col-md-2 col-form-label"> Search:</label></div>
-            <form method="get" th:action="@{/}" class="form-inline">
-                <select class="form-control " id="filterTicketId" name="filterTicketId">
-                    <option disabled="disabled" selected value=" "> -- select a ticket id  --</option>
-                    <option th:each="ticket : ${existingTickets}"
-                            th:value="${ticket}"
-                            th:text="${ticket}">
-                    </option>
-                </select>
-
-                <select class="form-control " id="validObjectTypesSeacrh" name="validObjectTypes">
-                    <option disabled="disabled" selected value=" "> -- select an object type --</option>
-                    <option th:each="ot : ${validObjectTypes}"
-                            th:value="${ot}"
-                            th:text="${ot}">
-                    </option>
-                </select>
-
-                <input type="text" name="filterObjectName" class="form-control" value=""
-                       placeholder="Object name">
-
-                <select class="form-control " id="namesSearch" name="names">
-                    <option disabled="disabled" selected value=" "> -- select name --</option>
-                    <option th:each="name : ${names}"
-                            th:value="${name}"
-                            th:text="${name}">
-                    </option>
-                </select>
-                <select class="form-control " id="referenceEnvsSearch" name="referenceEnvs">
-                    <option disabled="disabled" selected value=" "> -- select ref env --</option>
-                    <option th:each="ref : ${referenceEnvs}"
-                            th:value="${ref}"
-                            th:text="${ref}">
-                    </option>
-                </select>
-                <a class="btn btn-outline-primary" type="submit" role="button">Search</a>
-                <a class="btn btn-outline-primary" href="/" role="button">All</a>
-            </form>
-        </div>
+        <div><label class="col col-form-label"> Search:</label></div>
+        <form method="get" th:action="@{/}" class="form-inline">
+            <div class="form-row">
+                <div>
+                    <select class="form-control " id="filterTicketId" name="filterTicketId">
+                        <option disabled="disabled" selected value=" "> -- select a ticket id --</option>
+                        <option th:each="ticket : ${existingTickets}"
+                                th:value="${ticket}"
+                                th:text="${ticket}">
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <select class="form-control " id="filterObjectType" name="filterObjectType">
+                        <option disabled="disabled" selected value=" "> -- select an object type --</option>
+                        <option th:each="ot : ${validObjectTypes}"
+                                th:value="${ot}"
+                                th:text="${ot}">
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <input type="text" name="filterObjectName" class="form-control" value=""
+                           placeholder="type object name">
+                </div>
+                <div>
+                    <select class="form-control " id="filterName" name="filterName">
+                        <option disabled="disabled" selected value=" "> -- select name --</option>
+                        <option th:each="name : ${names}"
+                                th:value="${name}"
+                                th:text="${name}">
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <select class="form-control " id="referenceEnvsSearch" name="referenceEnvs">
+                        <option disabled="disabled" selected value=" "> -- select ref env --</option>
+                        <option th:each="ref : ${referenceEnvs}"
+                                th:value="${ref}"
+                                th:text="${ref}">
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <button type="submit" name="action" class="btn btn-primary">Search</button>
+                    <a class="btn btn-outline-primary" href="/" role="button">All</a>
+                </div>
+            </div>
+        </form>
     </div>
 
     <!--Add new record-->
@@ -76,10 +85,10 @@
             <div><label class="col-md-2 col-form-label"> Add:</label></div>
             <form th:action="@{/}" method="post" enctype="multipart/form-data">
                 <div class="form-row">
-                    <div >
+                    <div>
                         <input type="text" class="form-control " name="ticketNumber" placeholder="Ticket number"/>
                     </div>
-                    <div >
+                    <div>
                         <select class="form-control " id="actions" name="action">
                             <option th:each="ac : ${actions}"
                                     th:value="${ac}"
@@ -87,7 +96,7 @@
                             </option>
                         </select>
                     </div>
-                    <div >
+                    <div>
                         <select class="form-control " id="validObjectTypes" name="objectType">
                             <option th:each="objectType : ${validObjectTypes}"
                                     th:value="${objectType}"
@@ -98,7 +107,7 @@
                     <div>
                         <input class="form-control " type="text" name="objectName" placeholder="Object">
                     </div>
-                    <div >
+                    <div>
                         <select class="form-control " id="names" name="name">
                             <option th:each="name : ${names}"
                                     th:value="${name}"
@@ -106,7 +115,7 @@
                             </option>
                         </select>
                     </div>
-                    <div >
+                    <div>
                         <select class="form-control " id="referenceEnvs" name="refEnv">
                             <option th:each="refEnv : ${referenceEnvs}"
                                     th:value="${refEnv}"
@@ -114,7 +123,7 @@
                             </option>
                         </select>
                     </div>
-                    <div >
+                    <div>
                         <button type="submit" name="action" class="btn btn-primary">Submit</button>
                     </div>
                 </div>
@@ -129,7 +138,7 @@
     </div>
 
 
-        <!--List of records-->
+    <!--List of records-->
     <div>
         <table class="table table-bordered" th:object="${records}" id="table">
             <thead>

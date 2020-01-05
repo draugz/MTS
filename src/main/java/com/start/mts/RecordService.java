@@ -2,6 +2,7 @@ package com.start.mts;
 
 import com.start.mts.db.RecordRepository;
 import com.start.mts.domain.Record;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
@@ -34,7 +35,7 @@ public class RecordService {
             if (filterObjectType != null) {
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("objectType"), filterObjectType)));
             }
-            if (filterObjectName != null) {
+            if (StringUtils.isNotEmpty(filterObjectName)) {
                 predicates.add(criteriaBuilder.and(criteriaBuilder.like(root.get("objectName"), filterObjectName)));
             }
             if (filterName != null) {

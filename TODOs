@@ -1,6 +1,6 @@
 1) Ids are not continuated when inserted in DB directly
-2) added comma in list
-
-4) same row add menu
-5) button search is not working
+2) added comma in list - any way to fix it
+3)ALL and Search buttons same row as search criteria
+4)navigation after added record
+5) delete/update record?
 6) when search by object name  - should be LIKE search
