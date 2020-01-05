@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Arrays;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -64,9 +65,10 @@ public class AdminPageController {
     }
 
     @RequestMapping(value = "/adminPage", method = RequestMethod.POST)
-    public String addNewRecord(Model model,
+    public String addNewDeploy(Model model,
                                @RequestParam(value = "env", required = true) String env,
-                               @RequestParam(value = "ticketNumber", required = true) String ticketNumber) {
+                               @RequestParam(value = "ticketNumber", required = true) String ticketNumber,
+                               @RequestParam(value = "date", required = false) String dateStr) {
 
         if (StringUtils.isEmpty(env) || StringUtils.isEmpty(ticketNumber)) {
             model.addAttribute("error", "Missing field values");
@@ -74,22 +76,58 @@ public class AdminPageController {
             return "adminPage";
         }
 
-        List<Record> records = repository.findByTicketNumber(ticketNumber);
-        for (Record record : records) {
-            EnvDeploy deploy = new EnvDeploy(env, new Date(), record);
-            List<EnvDeploy> envDepls = Arrays.asList(deploy);
-            record.setEnvs(envDepls);
-            save(deploy, model);
+        Date date;
+        try {
+            date = getDate(dateStr);
+        } catch (ParseException e) {
+            model.addAttribute("error", "Error parsing date");
+            model.addAttribute("success", false);
+            e.printStackTrace();
+            return "adminPage";
         }
+
+        List<Record> existingRecords = repository.findByTicketNumber(ticketNumber.toUpperCase());
+
+        try {
+            deployAll(env, date, existingRecords);
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("success", false);
+        }
+
+        model.addAttribute("success", true);
         return "adminPage";
     }
 
-    private void save(EnvDeploy deploy, Model model) {
-        EnvDeploy saved = envDeployRepository.save(deploy);
-        if (saved.getId() != 0) {
-            model.addAttribute("success", true);
+    private void deployAll(String env, Date date, List<Record> existingRecords) throws Exception {
+        for (Record record : existingRecords) {
+            EnvDeploy deploy = new EnvDeploy(env, date, record);
+            addToRecordAndSave(record, deploy);
         }
     }
 
+    private void addToRecordAndSave(Record record, EnvDeploy deploy) throws Exception {
+        List<EnvDeploy> list = record.getEnvs();
+        list.add(deploy);
+        record.setEnvs(list);
+        save(deploy);
+    }
+
+    private Date getDate(@RequestParam(value = "date", required = false) String dateStr) throws ParseException {
+        Date date;
+        if (StringUtils.isEmpty(dateStr)) {
+            date = new Date();
+        } else {
+            date = DateFormat.getInstance().parse(dateStr);
+        }
+        return date;
+    }
+
+    private void save(EnvDeploy deploy) throws Exception {
+        EnvDeploy saved = envDeployRepository.save(deploy);
+        if (saved.getId() == 0) {
+            throw new Exception("error saving deploy");
+        }
+    }
 
 }
