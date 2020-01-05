@@ -2,7 +2,8 @@ package com.start.mts.web;
 
 import com.start.mts.RecordService;
 import com.start.mts.db.RecordRepository;
-import com.start.mts.domain.*;
+import com.start.mts.domain.Actions;
+import com.start.mts.domain.Record;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -63,13 +63,13 @@ public class StartPageController {
                                @RequestParam(value = "objectName", required = true) String objectName,
                                @RequestParam(value = "action", required = true) String action) {
 
-        model.addAttribute("success", false);
-        if (StringUtils.isEmpty(ticketNumber) || StringUtils.isEmpty(objectName)){
-            String error = "all fields must be filled";
-            model.addAttribute("error", error);
+        if (StringUtils.isEmpty(ticketNumber) || StringUtils.isEmpty(objectName)) {
+            setError(model,"All fields must be filled");
             return "startPage";
         }
-        if (action.contains(",")){
+
+        //this is workaround as there is comma after action and I can't find from where it appears
+        if (action.contains(",")) {
             action = action.replace(",", "");
         }
 
@@ -79,8 +79,13 @@ public class StartPageController {
             model.addAttribute("success", true);
         }
 
+        setError(model,"Failed to save");
         return "startPage";
     }
 
+    void setError(Model model, String errorMsg) {
+        model.addAttribute("error", errorMsg);
+        model.addAttribute("success", false);
+    }
 
 }
