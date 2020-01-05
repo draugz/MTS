@@ -64,7 +64,7 @@ public class StartPageController {
                                @RequestParam(value = "action", required = true) String action) {
 
         if (StringUtils.isEmpty(ticketNumber) || StringUtils.isEmpty(objectName)) {
-            setError(model,"All fields must be filled");
+            setError(model, "All fields must be filled");
             return "startPage";
         }
 
@@ -77,9 +77,9 @@ public class StartPageController {
         Record recordSaved = repository.save(record);
         if (recordSaved.getRecordId() != 0) {
             model.addAttribute("success", true);
+        } else {
+            setError(model, "Failed to save");
         }
-
-        setError(model,"Failed to save");
         return "startPage";
     }
 
