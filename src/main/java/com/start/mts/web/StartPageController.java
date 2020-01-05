@@ -1,5 +1,6 @@
 package com.start.mts.web;
 
+import com.start.mts.ObjectValidator;
 import com.start.mts.RecordService;
 import com.start.mts.db.RecordRepository;
 import com.start.mts.domain.Actions;
@@ -20,6 +21,8 @@ public class StartPageController {
     RecordService service;
     @Autowired
     RecordRepository repository;
+    @Autowired
+    ObjectValidator validator;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String getRecords(@RequestParam(required = false) String filterTicketId,
@@ -74,12 +77,17 @@ public class StartPageController {
         }
 
         Record record = new Record(name, refEnv, ticketNumber.toUpperCase(), objectTypeStr, objectName, action, null);
-        Record recordSaved = repository.save(record);
-        if (recordSaved.getRecordId() != 0) {
-            model.addAttribute("success", true);
+        if (validator.isValidObject(record)) {
+            Record recordSaved = repository.save(record);
+            if (recordSaved.getRecordId() != 0) {
+                model.addAttribute("success", true);
+            } else {
+                setError(model, "Failed to save");
+            }
         } else {
-            setError(model, "Failed to save");
+            setError(model, "Not valid object");
         }
+
         return "startPage";
     }
 
