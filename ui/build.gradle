@@ -15,5 +15,5 @@ jar.dependsOn 'npm_run_build'
 
 
 jar {
-  from 'dist/ui' into 'static'
+  from '../rest-api/src/main/resources/static' into 'static'
 }
