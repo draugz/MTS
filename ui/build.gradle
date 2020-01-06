@@ -5,9 +5,9 @@ plugins {
 
 
 node {
-  version = '9.2.0'
-  npmVersion = '6.4.1'
-  download = true
+  //version = '11.3.0'
+  //npmVersion = '6.10.3'
+  //download = true
 }
 
 
