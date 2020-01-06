@@ -1,7 +1,11 @@
 package com.start.mts.web;
 
+import com.start.mts.ObjectValidator;
+import com.start.mts.RecordService;
 import com.start.mts.db.RecordRepository;
+import com.start.mts.domain.Actions;
 import com.start.mts.domain.Record;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,43 +13,87 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class StartPageController {
-
+    @Autowired
+    RecordService service;
     @Autowired
     RecordRepository repository;
+    @Autowired
+    ObjectValidator validator;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String getRecords(@RequestParam(required = false, defaultValue = "") String filter1,
-                             @RequestParam(required = false, defaultValue = "") String filter2,
+    public String getRecords(@RequestParam(required = false) String filterTicketId,
+                             @RequestParam(required = false) String filterObjectType,
+                             @RequestParam(required = false) String filterObjectName,
+                             @RequestParam(required = false) String filterName,
+                             @RequestParam(required = false) String filterRefEnv,
                              Model model) {
 
-        List<Record> records;
-        if (filter1 != null && !filter1.isEmpty()) {
-            records = repository.findByTicketNumber(filter1);
-        } else if (filter2 != null && !filter2.isEmpty()) {
-            records = repository.findByObjectName(filter2);
-        } else {
-            records = repository.findAll();
-        }
-        model.addAttribute("filter1", filter1);
-        model.addAttribute("filter2", filter2);
+        List<String> existingTickets = service.getExistingTicketNumbers();
+        model.addAttribute("existingTickets", existingTickets);
+
+        List<String> validObjectTypes = service.getObjectTypes();
+        model.addAttribute("validObjectTypes", validObjectTypes);
+
+        Actions[] actions = Actions.values();
+        model.addAttribute("actions", actions);
+
+        List<String> referenceEnvs = service.getReferenceEnvironments();
+        model.addAttribute("referenceEnvs", referenceEnvs);
+
+        List<String> names = service.getNames();
+        model.addAttribute("names", names);
+
+        List<Record> records = service.findByCriteria(filterTicketId,
+                filterObjectType,
+                filterObjectName,
+                filterName,
+                filterRefEnv);
+
         model.addAttribute("records", records);
         return "startPage";
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public String addNewRecord(Model model,
-                               @RequestParam(value = "env", required = true) String env,
+                               @RequestParam(value = "refEnv", required = true) String refEnv,
                                @RequestParam(value = "name", required = true) String name,
                                @RequestParam(value = "ticketNumber", required = true) String ticketNumber,
-                               @RequestParam(value = "type", required = true) String type,
-                               @RequestParam(value = "object", required = true) String object,
+                               @RequestParam(value = "objectType", required = true) String objectTypeStr,
+                               @RequestParam(value = "objectName", required = true) String objectName,
                                @RequestParam(value = "action", required = true) String action) {
-        model.addAttribute("success", true);
-        return "addNewRecord";
+
+        if (StringUtils.isEmpty(ticketNumber) || StringUtils.isEmpty(objectName)) {
+            setError(model, "All fields must be filled");
+            return "startPage";
+        }
+
+        //this is workaround as there is comma after action and I can't find from where it appears
+        if (action.contains(",")) {
+            action = action.replace(",", "");
+        }
+
+        Record record = new Record(name, refEnv, ticketNumber.toUpperCase(), objectTypeStr, objectName, action, null);
+        if (validator.isValidObject(record)) {
+            Record recordSaved = repository.save(record);
+            if (recordSaved.getRecordId() != 0) {
+                model.addAttribute("success", true);
+            } else {
+                setError(model, "Failed to save");
+            }
+        } else {
+            setError(model, "Not valid object");
+        }
+
+        return "startPage";
     }
+
+    void setError(Model model, String errorMsg) {
+        model.addAttribute("error", errorMsg);
+        model.addAttribute("success", false);
+    }
+
 }

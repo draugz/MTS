@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:text-align="http://www.w3.org/1999/xhtml">
+
 <head>
-    <title>MTS Rebirth</title>
+    <title>MTS Rebirth project</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,73 +23,116 @@
 </head>
 
 <body>
-<h1>MTS Rebirth</h1>
-<div class="container">
+<div class="container-fluid">
+    <h1>MTS Rebirth</h1>
     <div th:insert="navBar"></div>
+</div>
+<div class="container-fluid">
 
     <!--Search menus-->
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            <form method="get" action="/main" class="form-inline">
-                <input type="text" name="filter1" class="form-control"value=""
-                       placeholder="Ticket number">
+    <div th:insert="search"></div>
+
+    <!--Add new record-->
+    <div>
+        <div class="form-group">
+            <div><label class="col-md-2 col-form-label"> Add:</label></div>
+            <form th:action="@{/}" method="post" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div class="col">
+                        <input type="text" class="form-control " name="ticketNumber" placeholder="Ticket number"/>
+                    </div>
+                    <div class="col">
+                        <select class="form-control " id="actions" name="action">
+                            <option th:each="ac : ${actions}"
+                                    th:value="${ac}"
+                                    th:text="${ac}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <select class="form-control " id="validObjectTypes" name="objectType">
+                            <option th:each="objectType : ${validObjectTypes}"
+                                    th:value="${objectType}"
+                                    th:text="${objectType}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <input class="form-control " type="text" name="objectName" placeholder="Object">
+                    </div>
+                    <div class="col">
+                        <select class="form-control " id="names" name="name">
+                            <option th:each="name : ${names}"
+                                    th:value="${name}"
+                                    th:text="${name}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <select class="form-control " id="referenceEnvs" name="refEnv">
+                            <option th:each="refEnv : ${referenceEnvs}"
+                                    th:value="${refEnv}"
+                                    th:text="${refEnv}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <button type="submit" name="action" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
             </form>
-            <form method="get" action="/main" class="form-inline">
-                <input type="text" name="filter2" class="form-control" value=""
-                       placeholder="Object">
-            </form>
-            <button type="submit" name="actionSearch" value="search" class="btn btn-primary ml-2">Search</button>
+        </div>
+        <div th:if="${success}">
+            <div class="alert alert-success" role="alert">Added!</div>
+        </div>
+        <div th:if="${success==false}">
+            <div class="alert alert-danger" role="alert">Failed! <span th:text="${error}"></span></div>
         </div>
     </div>
 
 
-    <!--Add new record-->
-    <a class="btn Light" data-toggle="collapse" href="#collapseInput" role="button" aria-expanded="false"
-       aria-controls="collapseInput">
-        Add
-    </a>
-    <div class="collapse mb-5" id="collapseInput">
-        <form method="post" enctype="multipart/form-data">
-            <input type="text" name="text" placeholder="Ticket number"/>
-            <input type="text" name="text" placeholder="Action">
-            <input type="text" name="text" placeholder="Type"/>
-            <input type="text" name="text" placeholder="Object">
-            <input type="text" name="text" placeholder="Name"/>
-            <input type="text" name="text" placeholder="Ref env">
-            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
-        </form>
-    </div>
+    <!--List of records-->
     <div>
-        <!--List of records-->
-        <table th:object="${records}" id="userTable" border="1">
+        <table class="table table-bordered" th:object="${records}" id="table">
+            <thead>
             <tr>
-                <th>Ticket id</th>
-                <th>Action</th>
-                <th>Type</th>
-                <th>Object</th>
-                <th>Name</th>
-                <th>Ref env</th>
-                <th>SysTest</th>
-                <th>AccTest</th>
-                <th>PROD</th>
+                <th scope="col">Ticket id</th>
+                <th scope="col">Action</th>
+                <th scope="col">Type</th>
+                <th scope="col">Object</th>
+                <th scope="col">Name</th>
+                <th scope="col">Ref env</th>
             </tr>
+            </thead>
+            <tbody>
             <tr th:each="record:${records}">
+            <!-- th:block rather than unneeded div -->
+            <th:block th:switch="${latestEnv}">
+                <div th:case="'PROD'"  th:style="background-color: #c9ffcd">
+                    <!-- print object is not active -->
+                </div>
+                <div th:case="'ACC'" th:style="background-color: #fbffc9" >
+                    <!-- print object is not active -->
+                </div>
+                <div th:case="'SYSTEST'" th:style="background-color: #c9eeff">
+                    <!-- print object is new and active -->
+                </div>
+            </th:block>
+
+          <!--  <div th:case="'PROD'"  th:style="background-color: #c9ffcd"></div>
+            <div th:case="'ACC'"  th:style="background-color: #fbffc9"></div>
+            <div th:case="'SYSTEST'"  th:style="background-color: #c9eeff"></div>
+-->
                 <td th:text="${record.getTicketNumber()}"></td>
                 <td th:text="${record.getAction()}"></td>
                 <td th:text="${record.getObjectType()}"></td>
                 <td th:text="${record.getObjectName()}"></td>
                 <td th:text="${record.getUserName()}"></td>
                 <td th:text="${record.getReferenceEnv()}"></td>
-                <td th:text="${record.getSysTestDeployed()}"></td>
-                <td th:text="${record.getAccTestDeployed()}"></td>
-                <td th:text="${record.getProdDeployed()}"></td>
             </tr>
+            </tbody>
         </table>
     </div>
 </div>
-
 </body>
 </html>

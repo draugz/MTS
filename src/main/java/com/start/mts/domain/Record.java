@@ -2,52 +2,44 @@ package com.start.mts.domain;
 
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "records", schema = "mts")
 public class Record {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int recordId;
-
     private String userName;
     private String referenceEnv;
     private String ticketNumber;
     private String objectType;
     private String objectName;
-    private String action; //TODO: enum
-    /*@Transient
-    private List<EnvDeploy> envs;*/
-    private Date sysTestDeployed;
-    private Date accTestDeployed;
-    private Date prodDeployed;
+    private String action;
 
-    public void setProdDeployed(Date prodDeployed) {
-        this.prodDeployed = prodDeployed;
-    }
-
-    public Date getProdDeployed() {
-        return prodDeployed;
-    }
-
-    public void setSysTestDeployed(Date sysTestDeployed) {
-        this.sysTestDeployed = sysTestDeployed;
-    }
-
-    public void setAccTestDeployed(Date accTestDeployed) {
-        this.accTestDeployed = accTestDeployed;
-    }
-
-    public Date getSysTestDeployed() {
-        return sysTestDeployed;
-    }
-
-    public Date getAccTestDeployed() {
-        return accTestDeployed;
-    }
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "record_id")
+    private List<EnvDeploy> envs;
 
     public Record() {
+    }
+
+    public Record(String userName, String referenceEnv, String ticketNumber, String objectType, String objectName, String action, List<EnvDeploy> envs) {
+        this.userName = userName;
+        this.referenceEnv = referenceEnv;
+        this.ticketNumber = ticketNumber;
+        this.objectType = objectType;
+        this.objectName = objectName;
+        this.action = action;
+        this.envs = envs;
+    }
+
+    public void setEnvs(List<EnvDeploy> envs) {
+        this.envs = envs;
+    }
+
+    public List<EnvDeploy> getEnvs() {
+        return envs;
     }
 
     public int getRecordId() {
@@ -106,19 +98,27 @@ public class Record {
         this.objectName = objectName;
     }
 
- /*   public void setEnvs(List<EnvDeploy> envs) {
-        this.envs = envs;
+    public boolean isSystestDeployed() {
+        return isEnvDeployed("SYSTEST");
     }
 
-    public List<EnvDeploy> getEnvs() {
-        return envs;
+    public boolean isAcceptanceDeployed() {
+        return  isEnvDeployed("ACCTEST");
     }
-    public String findEnvsString() {
-        List<EnvDeploy> list = this.getEnvs();
-        String res = "";
-        for (EnvDeploy env: list){
-            res = res + env.getEnv() + " " + env.getDate().toString();
+
+    public boolean isProdDeployed() {
+        return isEnvDeployed("PROD");
+    }
+
+    public boolean isEnvDeployed(String envName) {
+        if (envName != null) {
+            List<EnvDeploy> envs = this.getEnvs();
+            for (EnvDeploy env : envs) {
+                if (envName.equals(env.getEnv())) {
+                    return true;
+                }
+            }
         }
-        return res;
-    }*/
+        return false;
+    }
 }

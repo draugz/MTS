@@ -10,9 +10,68 @@
     <!-- <meta charset="UTF-8">-->
 </head>
 <body>
-<h1>MTS Rebirth</h1>
-<div class="container">
+<div class="container-fluid">
+    <h1>MTS Rebirth</h1>
+</div>
+<div class="container-fluid">
     <div th:insert="navBar"></div>
+
+    <!--Search menus-->
+    <div th:insert="search"></div>
+
+    <!--Deploy Ticket-->
+    <div class="form-group">
+        <div><label class="col-md-2 col-form-label"> Add:</label></div>
+        <form th:action="@{/adminPage}" method="post" enctype="multipart/form-data">
+            <div class="form-row">
+                <div class="col">
+                    <input type="text" class="form-control " name="ticketNumber" placeholder="Ticket number"/>
+                </div>
+                <div class="col">
+                    <select class="form-control " id="env" name="env">
+                        <option th:each="env : ${envs}"
+                                th:value="${env}"
+                                th:text="${env}">
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <input type="datetime-local" class="form-control " name="date" placeholder="Datetime (default is today)"/>
+                </div>
+                <div class="col">
+                    <button type="submit" name="action" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--List of records-->
+    <div>
+        <table class="table table-bordered" th:object="${records}" id="table">
+            <thead>
+            <tr>
+                <th scope="col">Record id</th>
+                <th scope="col">Ticket id</th>
+                <th scope="col">Action</th>
+                <th scope="col">Type</th>
+                <th scope="col">Object</th>
+                <th scope="col">Name</th>
+                <th scope="col">Ref env</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="record:${records}">
+                <td th:text="${record.getRecordId()}"></td>
+                <td th:text="${record.getTicketNumber()}"></td>
+                <td th:text="${record.getAction()}"></td>
+                <td th:text="${record.getObjectType()}"></td>
+                <td th:text="${record.getObjectName()}"></td>
+                <td th:text="${record.getUserName()}"></td>
+                <td th:text="${record.getReferenceEnv()}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 </body>
 </html>
